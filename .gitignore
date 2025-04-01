@@ -1,0 +1,24 @@
+# Node dependencies
+node_modules/
+
+# Uploads and temp files
+uploads/
+*.csv
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# Jest coverage
+coverage/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDE-specific (VSCode, JetBrains, etc.)
+.vscode/
+.idea/
+git 
