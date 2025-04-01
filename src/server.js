@@ -1,15 +1,17 @@
 import express from 'express';
 import multer from 'multer';
-import { handleUpload, checkStatus } from './controllers/uploadController.js';
-import { limiter } from './middleware/rateLimiter.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { handleUpload, checkStatus } from './controllers/uploadController.js';
+import { limiter } from './middleware/rateLimiter.js';
+
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.join(__dirname, '../public')));
 
 
 const app = express();
+app.use(express.static(path.join(__dirname, '../public')));
+
 const upload = multer({ dest: 'uploads/' });
 
 app.post('/upload', limiter, upload.single('file'), handleUpload);
