@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSV Upload</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      max-width: 500px;
+      margin: 0 auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+    }
+    .status {
+      margin-top: 1rem;
+    }
+    input[type="file"] {
+      margin-bottom: 1rem;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Upload CSV File</h2>
+    <form id="uploadForm">
+      <input type="file" id="csvFile" name="file" accept=".csv" required />
+      <br />
+      <button type="submit">Upload</button>
+    </form>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const statusDiv = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('csvFile');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        statusDiv.textContent = 'Please select a CSV file.';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      statusDiv.textContent = 'Uploading...';
+
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.status}`);
+        }
+
+        const result = await response.json();
+        statusDiv.innerHTML = `✅ Uploaded! <br/>
+          <strong>Total:</strong> ${result.totalRecords}<br/>
+          <strong>Processed:</strong> ${result.processedRecords}<br/>
+          <strong>Failed:</strong> ${result.failedRecords}<br/>
+          ${result.details.length > 0 ? '<br/><strong>Failures:</strong><pre>' + JSON.stringify(result.details, null, 2) + '</pre>' : ''}`;
+
+      } catch (err) {
+        console.error(err);
+        statusDiv.textContent = '❌ Upload failed. See console for details.';
+      }
+    });
+  </script>
+</body>
+</html>
