@@ -1,7 +1,5 @@
 # CSV Upload API
 
-Hi Solirius team this is my submission: 
-
 A full-stack Node.js application for uploading and validating user emails from a CSV file. This project simulates real-world backend patterns including file streaming, asynchronous processing, concurrency limiting, rate limiting, and status tracking.
 
 > Built as a technical challenge to demonstrate backend engineering capabilities and production-level project structure.
